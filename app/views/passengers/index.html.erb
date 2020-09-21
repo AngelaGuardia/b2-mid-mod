@@ -1,0 +1,7 @@
+<h1>All Passengers</h1>
+
+<ul>
+  <% @passengers.each do |passenger| %>
+    <li id=<%="passenger-#{passenger.id}" %>><%= passenger.name %>: <%= passenger.total_flights %></li>
+  <% end %>
+</ul>

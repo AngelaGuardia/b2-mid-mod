@@ -4,4 +4,5 @@ Rails.application.routes.draw do
   resources :flights
   resources :airlines
   resources :tickets
+  resources :passengers
 end
