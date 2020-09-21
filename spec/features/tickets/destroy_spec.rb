@@ -1,7 +1,7 @@
 require 'rails_helper'
 
-describe 'As a visitor on the Airline Show Page' do
-  it "I can see a list of passengers that have lights on that airline" do
+describe 'As a visitor on the Flight Index page' do
+  it "I can remove passengers" do
     aircanada = Airline.create!(name: "AirCanada")
     flight_ac1 = Flight.create!(number: "AC 1001", airline: aircanada)
     flight_ac2 = Flight.create!(number: "AC 1002", airline: aircanada)
@@ -18,21 +18,22 @@ describe 'As a visitor on the Airline Show Page' do
     passenger_aa3 = flight_aa2.passengers.create!(name:"Bob")
     passenger_aa4 = flight_aa2.passengers.create!(name:"Cam")
 
-    flight_ac2.passengers << passenger_aa2
-    #same passenger on two flights
-    flight_ac1.passengers << passenger_aa1
-    flight_ac2.passengers << passenger_aa1
+    visit flights_path
 
-    visit airline_path(aircanada)
+    Flight.all.each do |flight|
+      within("#flight-#{flight.id}") do
+        flight.passengers.each do |passenger|
+          expect(page).to have_link('Remove')
+        end
+      end
+    end
 
-    expect(page).to have_content(passenger_ac1.name)
-    expect(page).to have_content(passenger_ac2.name)
-    expect(page).to have_content(passenger_ac3.name)
-    expect(page).to have_content(passenger_ac4.name)
-    expect(page).to have_content(passenger_aa1.name)
-    expect(page).to have_content(passenger_aa2.name)
-    expect(page).not_to have_content(passenger_aa3.name)
-    expect(page).not_to have_content(passenger_aa4.name)
-    expect(page.all('li').count).to eq(6)
+    within("#passenger-#{passenger_ac1.id}") do
+      click_link('Remove')
+    end
+
+    expect(current_path).to eq(flights_path)
+
+    expect(page).not_to have_css("#passenger-#{passenger_ac1.id}")
   end
 end

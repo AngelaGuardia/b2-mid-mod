@@ -1,7 +1,7 @@
 class AirlinesController < ApplicationController
   def show
     @airline = Airline.find(airline_params[:id])
-    @passengers = @airline.passengers
+    @passengers = @airline.passengers.distinct
   end
 
   private
